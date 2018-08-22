@@ -98,28 +98,28 @@ impl Maze {
                 let xf = x as f32;
                 let yf = y as f32;
                 let ssf = square_side as f32;
-                if y == 0 || square.dest().iter().all(|&val| val != (x, y-1)) {
+                if y == 0 || !square.dest().contains(&(x, y-1)) {
                     draw_line_segment_mut(
                         &mut out,
                         (xf * ssf, yf * ssf),
                         ((xf+1.)*ssf, yf*ssf),
                         black);
                 }
-                if y == self.side-1 || square.dest().iter().all(|&val| val != (x, y+1)) {
+                if y == self.side-1 || !square.dest().contains(&(x, y+1)) {
                     draw_line_segment_mut(
                         &mut out,
                         (xf * ssf, (yf+1.) * ssf),
                         ((xf+1.)*ssf, (yf+1.)*ssf),
                         black);
                 }
-                if x == self.side-1 || square.dest().iter().all(|&val| val != (x+1, y)) {
+                if x == self.side-1 || !square.dest().contains(&(x+1, y)) {
                     draw_line_segment_mut(
                         &mut out,
                         ((xf+1.) * ssf, yf * ssf),
                         ((xf+1.)*ssf, (yf+1.)*ssf),
                         black);
                 }
-                if x == 0 || square.dest().iter().all(|&val| val != (x-1, y)) {
+                if x == 0 || !square.dest().contains(&(x-1, y)) {
                     draw_line_segment_mut(
                         &mut out,
                         (xf * ssf, yf * ssf),
