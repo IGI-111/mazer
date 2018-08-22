@@ -36,21 +36,23 @@ impl Square {
 #[derive(Debug)]
 struct Maze {
     squares: Vec<Square>,
-    side: usize,
+    width: usize,
+    height: usize,
 }
 
 impl Maze {
-    pub fn new(side: usize) -> Maze {
-        assert!(side > 0);
-        Maze { squares: vec![Square::new(); side * side], side }
+    pub fn new(width: usize, height: usize) -> Maze {
+        assert!(width > 0);
+        assert!(height > 0);
+        Maze { squares: vec![Square::new(); width * height], width, height }
     }
 
     fn at(&self, (x, y): Coor) -> &Square {
-        &self.squares[x + y*self.side]
+        &self.squares[x + y*self.width]
     }
 
     fn at_mut(&mut self, (x, y): Coor) -> &mut Square {
-        &mut self.squares[x + y*self.side]
+        &mut self.squares[x + y*self.width]
     }
 
     pub fn generate(&mut self) {
@@ -78,9 +80,9 @@ impl Maze {
     fn adjacent_squares(&self, (x, y): Coor) -> Vec<Coor> {
         let mut res = Vec::new();
         if x > 0 { res.push( (x-1, y) )}
-        if x < self.side-1 { res.push( (x+1, y) )}
+        if x < self.width-1 { res.push( (x+1, y) )}
         if y > 0 { res.push( (x, y-1) )}
-        if y < self.side-1 { res.push( (x, y+1) )}
+        if y < self.height-1 { res.push( (x, y+1) )}
         res
     }
 
@@ -91,9 +93,9 @@ impl Maze {
         let white = Rgb([255, 255, 255]);
         let black = Rgb([0, 0, 0]);
 
-        let mut out = RgbImage::from_pixel(self.side as u32 * square_side + 1, self.side as u32 * square_side + 1, white);
-        for x in 0..self.side {
-            for y in 0..self.side {
+        let mut out = RgbImage::from_pixel(self.width as u32 * square_side + 1, self.height as u32 * square_side + 1, white);
+        for x in 0..self.width {
+            for y in 0..self.height {
                 let square = self.at((x,y));
                 let xf = x as f32;
                 let yf = y as f32;
@@ -105,14 +107,14 @@ impl Maze {
                         ((xf+1.)*ssf, yf*ssf),
                         black);
                 }
-                if y == self.side-1 || !square.dest().contains(&(x, y+1)) {
+                if y == self.height-1 || !square.dest().contains(&(x, y+1)) {
                     draw_line_segment_mut(
                         &mut out,
                         (xf * ssf, (yf+1.) * ssf),
                         ((xf+1.)*ssf, (yf+1.)*ssf),
                         black);
                 }
-                if x == self.side-1 || !square.dest().contains(&(x+1, y)) {
+                if x == self.width-1 || !square.dest().contains(&(x+1, y)) {
                     draw_line_segment_mut(
                         &mut out,
                         ((xf+1.) * ssf, yf * ssf),
@@ -134,11 +136,17 @@ impl Maze {
 
 
 fn main() {
-    let mut side = 100;
-    if let Some(arg) = env::args().skip(1).next() {
-        side = arg.parse::<usize>().expect("Invalid side value.");
+    let mut args = env::args().skip(1);
+    let mut width = 100;
+    if let Some(arg) = args.next() {
+        width = arg.parse::<usize>().expect("Invalid width value.");
     }
-    let mut maze = Maze::new(side);
+    let mut height = width;
+    if let Some(arg) = args.next() {
+        height = arg.parse::<usize>().expect("Invalid height value.");
+    }
+
+    let mut maze = Maze::new(width, height);
     maze.generate();
     maze.render().save("out.png").expect("Couldn't write image.");
 }
