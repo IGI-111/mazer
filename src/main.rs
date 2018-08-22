@@ -57,13 +57,11 @@ impl Maze {
         let mut rng = thread_rng();
         let mut stack = vec![(0, 0)];
         
-        loop {
-            if stack.len() == 0 { break; }
-
+        while stack.len() > 0 {
             let top = stack[stack.len()-1];
             self.at_mut(top).visit();
 
-            let adj = self.adjacent_squares(top).iter().filter(|&i| !self.at(*i).visited()).cloned().collect::<Vec<Coor>>();
+            let adj: Vec<Coor> = self.adjacent_squares(top).into_iter().filter(|&i| !self.at(i).visited()).collect();
             if adj.len() == 0 {
                  stack.pop();
                  continue;
