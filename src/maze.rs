@@ -32,7 +32,7 @@ impl Maze {
     }
 
     pub fn generate(&mut self) {
-        let mut rng = thread_rng();
+        let mut rng = rand::thread_rng();
         let mut stack = vec![(0, 0)];
 
         while stack.len() > 0 {

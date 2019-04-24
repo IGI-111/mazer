@@ -4,6 +4,6 @@ version = "0.1.0"
 authors = ["jibril saffi <jibril.saffi@st.com>"]
 
 [dependencies]
-rand = "0.5"
+rand = "0.6.5"
 image = "0.21.1"
 imageproc = "0.18"
