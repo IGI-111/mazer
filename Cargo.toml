@@ -5,5 +5,5 @@ authors = ["jibril saffi <jibril.saffi@st.com>"]
 
 [dependencies]
 rand = "0.5"
-image = "*"
-imageproc = "*"
+image = "0.21.1"
+imageproc = "0.18"
